@@ -18,8 +18,8 @@ class PostController extends Controller
             'posts' => Post::with(['user', 'likes', 'comments.user'])
                 ->withCount('likes')
                 ->latest()
-                ->get()
-                ->map(function ($post) {
+                ->paginate(5)
+                ->through(function ($post) {
                     return array_merge($post->toArray(), [
                         'is_liked' => auth()->check() ? $post->likes->contains('user_id', auth()->id()) : false,
                     ]);
@@ -34,8 +34,8 @@ class PostController extends Controller
                 ->with(['user', 'likes', 'comments.user'])
                 ->withCount('likes')
                 ->latest()
-                ->get()
-                ->map(function ($post) {
+                ->paginate(10)
+                ->through(function ($post) {
                     return array_merge($post->toArray(), [
                         'is_liked' => $post->likes->contains('user_id', auth()->id()),
                     ]);

@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $users = User::factory(10)->create();
         $users->push($testUser);
 
-        $posts = \App\Models\Post::factory(20)->recycle($users)->create();
+        $posts = \App\Models\Post::factory(100)->recycle($users)->create();
 
         foreach ($posts as $post) {
             // Create unique likes

@@ -1,26 +1,79 @@
 import AppLayout from '@/layouts/app-layout';
-import { Post } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import { PaginatedData, Post } from '@/types';
+import { Head, useForm, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { X } from 'lucide-react';
-import { FormEventHandler, useState, useEffect } from 'react';
+import { X, Loader2 } from 'lucide-react';
+import { FormEventHandler, useState, useEffect, useRef } from 'react';
 import * as postsRoutes from '@/routes/posts';
 import PostCard from '@/components/post-card';
 
 interface Props {
-    posts: Post[];
+    posts: PaginatedData<Post>;
 }
 
 export default function MyPosts({ posts }: Props) {
+    const [allPosts, setAllPosts] = useState<Post[]>(posts.data);
+    const [loading, setLoading] = useState(false);
+    const observer = useRef<IntersectionObserver | null>(null);
+    const lastPostRef = useRef<HTMLDivElement | null>(null);
+
     const [showCreate, setShowCreate] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
     const { data, setData, post, processing, reset, errors } = useForm({
         image: null as File | null,
         caption: '',
     });
+
+    useEffect(() => {
+        if (posts.current_page === 1) {
+            setAllPosts(posts.data);
+        } else {
+            setAllPosts((prev) => {
+                const newPosts = posts.data.filter((p) => !prev.some((existing) => existing.id === p.id));
+                return [...prev, ...newPosts];
+            });
+        }
+    }, [posts.data, posts.current_page]);
+
+    useEffect(() => {
+        if (loading) return;
+
+        const options = {
+            root: null,
+            rootMargin: '20px',
+            threshold: 1.0,
+        };
+
+        const callback = (entries: IntersectionObserverEntry[]) => {
+            if (entries[0].isIntersecting && posts.next_page_url) {
+                setLoading(true);
+                router.get(
+                    posts.next_page_url!,
+                    {},
+                    {
+                        preserveState: true,
+                        preserveScroll: true,
+                        only: ['posts'],
+                        onFinish: () => setLoading(false),
+                    },
+                );
+            }
+        };
+
+        observer.current = new IntersectionObserver(callback, options);
+        if (lastPostRef.current) {
+            observer.current.observe(lastPostRef.current);
+        }
+
+        return () => {
+            if (observer.current) {
+                observer.current.disconnect();
+            }
+        };
+    }, [posts.next_page_url, loading]);
 
     useEffect(() => {
         if (!data.image) {
@@ -106,7 +159,7 @@ export default function MyPosts({ posts }: Props) {
                     </Card>
                 )}
 
-                {posts.length === 0 ? (
+                {allPosts.length === 0 ? (
                     <Card>
                         <CardContent className="py-8 text-center text-muted-foreground">
                             You haven't posted anything yet.
@@ -114,11 +167,25 @@ export default function MyPosts({ posts }: Props) {
                     </Card>
                 ) : (
                     <div className="space-y-6">
-                        {posts.map((post) => (
-                            <PostCard key={post.id} post={post} />
+                        {allPosts.map((post, index) => (
+                            <div ref={index === allPosts.length - 1 ? lastPostRef : null} key={post.id}>
+                                <PostCard post={post} />
+                            </div>
                         ))}
                     </div>
                 )}
+
+                {/* Feed */}
+                <div className="space-y-6">
+                    {allPosts.map((post) => (
+                        <PostCard key={post.id} post={post} />
+                    ))}
+                </div>
+
+                {/* Loading Sentinel */}
+                <div ref={lastPostRef} className="h-20 flex items-center justify-center mt-4">
+                    {loading && <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />}
+                </div>
             </div>
         </AppLayout>
     );

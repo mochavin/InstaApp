@@ -73,3 +73,20 @@ export interface Like {
     created_at: string;
     updated_at: string;
 }
+
+export interface PaginatedData<T> {
+    data: T[];
+    current_page: number;
+    last_page: number;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+    from: number;
+    to: number;
+    total: number;
+    per_page: number;
+    links: {
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
+}
