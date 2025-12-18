@@ -48,6 +48,7 @@ export interface Post {
     image: string;
     caption: string | null;
     created_at: string;
+    created_at_human: string;
     updated_at: string;
     user: User;
     likes: Like[];
@@ -62,6 +63,7 @@ export interface Comment {
     post_id: number;
     body: string;
     created_at: string;
+    created_at_human: string;
     updated_at: string;
     user: User;
 }

@@ -147,45 +147,55 @@ export default function PostCard({ post }: { post: Post }) {
                                     <img src={post.image} alt={post.caption || ''} className="w-full h-auto max-h-[90vh] object-contain" />
                                 </DialogContent>
                             </Dialog>
-                            <div className="p-4">
+                            <div className="px-4 pt-4 pb-2">
                                 <p className="text-sm">
                                     <Link href={usersRoutes.posts(post.user_id).url} className="font-bold mr-2 hover:underline">
                                         {post.user.name}
                                     </Link>
                                     {post.caption}
                                 </p>
+                                <p className="text-[10px] text-muted-foreground uppercase mt-1">
+                                    {post.created_at_human}
+                                </p>
                             </div>
                         </>
                     )}
                 </CardContent>
                 <CardFooter className="flex flex-col items-start p-4 pt-0">
-                    <div className="flex items-center space-x-4 mb-2">
+                    <div className="flex items-center">
                         <div className="flex items-center">
-                            <Button variant="ghost" onClick={toggleLike} className='px-4'>
+                            <Button variant="ghost" onClick={toggleLike} className='px-2'>
                                 <Heart className={`h-4 w-4 ${post.is_liked ? 'fill-red-500 text-red-500' : ''}`} />
-                                <span className="font-bold text-sm">{post.likes_count}</span>
+                                <span className="font-bold text-sm ml-1">{post.likes_count}</span>
                             </Button>
                         </div>
                         <div className="flex items-center">
-                            <Button variant="ghost" className='px-4'>
+                            <Button variant="ghost" className='px-2'>
                                 <MessageCircle className="h-4 w-4" />
-                                <span className="font-bold text-sm">{post.comments.length}</span>
+                                <span className="font-bold text-sm ml-1">{post.comments.length}</span>
                             </Button>
                         </div>
                     </div>
                     
                     {/* Comments */}
-                    <div className="w-full space-y-2 mb-4">
+                    <div className="w-full space-y-3 mt-2 mb-4">
                         {post.comments.map((comment) => (
                             <div key={comment.id} className="text-sm flex justify-between items-start">
-                                <div>
-                                    <Link href={usersRoutes.posts(comment.user_id).url} className="font-bold mr-2 hover:underline">
-                                        {comment.user.name}
-                                    </Link>
-                                    {comment.body}
+                                <div className="flex-1">
+                                    <div className="flex items-center space-x-2">
+                                        <Link href={usersRoutes.posts(comment.user_id).url} className="font-bold hover:underline">
+                                            {comment.user.name}
+                                        </Link>
+                                        <span className="text-[10px] text-muted-foreground">
+                                            {comment.created_at_human}
+                                        </span>
+                                    </div>
+                                    <p className="text-sm text-foreground/90 mt-0.5">
+                                        {comment.body}
+                                    </p>
                                 </div>
                                 {comment.user_id === auth.user.id && (
-                                    <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => setDeleteConfirm({ type: 'comment', id: comment.id })}>
+                                    <Button variant="ghost" size="icon" className="h-4 w-4 ml-2" onClick={() => setDeleteConfirm({ type: 'comment', id: comment.id })}>
                                         <Trash2 className="h-3 w-3 text-red-500" />
                                     </Button>
                                 )}

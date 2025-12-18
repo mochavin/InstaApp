@@ -29,14 +29,19 @@ export default function MyPosts({ posts, posts_count }: Props) {
     });
 
     useEffect(() => {
-        if (posts.current_page === 1) {
-            setAllPosts(posts.data);
-        } else {
-            setAllPosts((prev) => {
-                const newPosts = posts.data.filter((p) => !prev.some((existing) => existing.id === p.id));
-                return [...prev, ...newPosts];
+        setAllPosts((prev) => {
+            if (posts.current_page === 1) {
+                return posts.data;
+            }
+
+            const updatedPrev = prev.map((p) => {
+                const updated = posts.data.find((newP) => newP.id === p.id);
+                return updated ? updated : p;
             });
-        }
+
+            const newPosts = posts.data.filter((p) => !prev.some((existing) => existing.id === p.id));
+            return [...updatedPrev, ...newPosts];
+        });
     }, [posts.data, posts.current_page]);
 
     useEffect(() => {
