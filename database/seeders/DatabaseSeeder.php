@@ -13,9 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::firstOrCreate(
+        $testUser = User::firstOrCreate(
             ['email' => 'test@example.com'],
             [
                 'name' => 'Test User',
@@ -23,5 +21,23 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        $users = User::factory(10)->create();
+        $users->push($testUser);
+
+        $posts = \App\Models\Post::factory(20)->recycle($users)->create();
+
+        foreach ($posts as $post) {
+            // Create unique likes
+            $likers = $users->random(rand(0, $users->count()));
+            foreach ($likers as $liker) {
+                \App\Models\Like::create([
+                    'user_id' => $liker->id,
+                    'post_id' => $post->id,
+                ]);
+            }
+
+            \App\Models\Comment::factory(rand(0, 5))->recycle($users)->recycle($post)->create();
+        }
     }
 }
