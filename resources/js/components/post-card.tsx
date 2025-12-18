@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import * as commentsRoutes from '@/routes/comments';
@@ -131,7 +132,18 @@ export default function PostCard({ post }: { post: Post }) {
                         </div>
                     ) : (
                         <>
-                            <img src={post.image} alt={post.caption || ''} className="w-full h-auto aspect-square object-cover" />
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <img
+                                        src={post.image}
+                                        alt={post.caption || ''}
+                                        className="w-full h-auto aspect-square object-cover cursor-pointer transition-opacity hover:opacity-90"
+                                    />
+                                </DialogTrigger>
+                                <DialogContent className="min-w-4xl p-0 overflow-hidden border-none bg-transparent shadow-none flex items-center justify-center">
+                                    <img src={post.image} alt={post.caption || ''} className="w-full h-auto max-h-[90vh] object-contain" />
+                                </DialogContent>
+                            </Dialog>
                             <div className="p-4">
                                 <p className="text-sm">
                                     <span className="font-bold mr-2">{post.user.name}</span>
@@ -143,14 +155,19 @@ export default function PostCard({ post }: { post: Post }) {
                 </CardContent>
                 <CardFooter className="flex flex-col items-start p-4 pt-0">
                     <div className="flex items-center space-x-4 mb-2">
-                        <Button variant="ghost" size="icon" onClick={toggleLike}>
-                            <Heart className={`h-6 w-6 ${post.is_liked ? 'fill-red-500 text-red-500' : ''}`} />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                            <MessageCircle className="h-6 w-6" />
-                        </Button>
+                        <div className="flex items-center">
+                            <Button variant="ghost" onClick={toggleLike} className='px-4'>
+                                <Heart className={`h-4 w-4 ${post.is_liked ? 'fill-red-500 text-red-500' : ''}`} />
+                                <span className="font-bold text-sm">{post.likes_count}</span>
+                            </Button>
+                        </div>
+                        <div className="flex items-center">
+                            <Button variant="ghost" className='px-4'>
+                                <MessageCircle className="h-4 w-4" />
+                                <span className="font-bold text-sm">{post.comments.length}</span>
+                            </Button>
+                        </div>
                     </div>
-                    <div className="font-bold text-sm mb-2">{post.likes_count} likes</div>
                     
                     {/* Comments */}
                     <div className="w-full space-y-2 mb-4">
