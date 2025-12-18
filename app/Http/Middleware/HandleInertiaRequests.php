@@ -47,6 +47,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'flash' => [
                 'message' => $request->session()->get('message'),
+                'newPost' => $request->session()->get('newPost'),
                 'updatedPost' => $request->session()->get('updatedPost'),
                 'deletedPostId' => $request->session()->get('deletedPostId'),
             ],

@@ -29,6 +29,7 @@ export interface SharedData {
     sidebarOpen: boolean;
     flash: {
         message: string | null;
+        newPost: Post | null;
         updatedPost: Post | null;
         deletedPostId: number | null;
     };

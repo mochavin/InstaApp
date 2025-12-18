@@ -18,7 +18,7 @@ class PostController extends Controller
         return Inertia::render('Posts/Index', [
             'posts' => Post::with(['user', 'likes', 'comments.user'])
                 ->withCount('likes')
-                ->latest()
+                ->latest('created_at')
                 ->paginate(5)
                 ->through(function ($post) {
                     return array_merge($post->toArray(), [
@@ -73,12 +73,15 @@ class PostController extends Controller
 
         $path = $request->file('image')->store('posts', 'public');
 
-        auth()->user()->posts()->create([
+        $post = auth()->user()->posts()->create([
             'image' => Storage::url($path),
             'caption' => $request->caption,
         ]);
 
-        return back()->with('success', 'Post created successfully.');
+        $post->load(['user', 'likes', 'comments.user'])->loadCount('likes');
+        $post->is_liked = false;
+
+        return back()->with('newPost', $post);
     }
 
     public function update(Request $request, Post $post)

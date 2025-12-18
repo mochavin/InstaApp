@@ -22,6 +22,15 @@ export default function Index({ posts }: Props) {
     const lastPostRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        if (flash.newPost) {
+            setAllPosts((prev) => {
+                if (prev.some((p) => p.id === flash.newPost!.id)) return prev;
+                return [flash.newPost!, ...prev];
+            });
+        }
+    }, [flash.newPost]);
+
+    useEffect(() => {
         if (flash.updatedPost) {
             setAllPosts((prev) => prev.map((p) => (p.id === flash.updatedPost!.id ? flash.updatedPost! : p)));
         }
