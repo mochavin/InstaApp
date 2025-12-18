@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
-import { PaginatedData, Post, User } from '@/types';
-import { Head, router } from '@inertiajs/react';
+import { PaginatedData, Post, User, SharedData } from '@/types';
+import { Head, router, usePage } from '@inertiajs/react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -13,10 +13,23 @@ interface Props {
 }
 
 export default function UserPosts({ user, posts, posts_count }: Props) {
+    const { flash } = usePage<SharedData>().props;
     const [allPosts, setAllPosts] = useState<Post[]>(posts.data);
     const [loading, setLoading] = useState(false);
     const observer = useRef<IntersectionObserver | null>(null);
     const lastPostRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        if (flash.updatedPost) {
+            setAllPosts((prev) => prev.map((p) => (p.id === flash.updatedPost!.id ? flash.updatedPost! : p)));
+        }
+    }, [flash.updatedPost]);
+
+    useEffect(() => {
+        if (flash.deletedPostId) {
+            setAllPosts((prev) => prev.filter((p) => p.id !== flash.deletedPostId));
+        }
+    }, [flash.deletedPostId]);
 
     useEffect(() => {
         setAllPosts((prev) => {

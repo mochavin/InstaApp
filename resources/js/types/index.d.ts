@@ -27,6 +27,11 @@ export interface SharedData {
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    flash: {
+        message: string | null;
+        updatedPost: Post | null;
+        deletedPostId: number | null;
+    };
     [key: string]: unknown;
 }
 

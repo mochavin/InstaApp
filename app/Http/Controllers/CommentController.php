@@ -22,15 +22,22 @@ class CommentController extends Controller
             'body' => $request->body,
         ]);
 
-        return back()->with('success', 'Comment added.');
+        $post->load(['user', 'likes', 'comments.user'])->loadCount('likes');
+        $post->is_liked = auth()->check() ? $post->likes->contains('user_id', auth()->id()) : false;
+
+        return back()->with('updatedPost', $post);
     }
 
     public function destroy(Comment $comment)
     {
         $this->authorize('delete', $comment);
 
+        $post = $comment->post;
         $comment->delete();
 
-        return back()->with('success', 'Comment deleted.');
+        $post->load(['user', 'likes', 'comments.user'])->loadCount('likes');
+        $post->is_liked = auth()->check() ? $post->likes->contains('user_id', auth()->id()) : false;
+
+        return back()->with('updatedPost', $post);
     }
 }

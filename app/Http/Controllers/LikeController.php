@@ -14,13 +14,19 @@ class LikeController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return back();
+        $post->load(['user', 'likes', 'comments.user'])->loadCount('likes');
+        $post->is_liked = true;
+
+        return back()->with('updatedPost', $post);
     }
 
     public function destroy(Post $post)
     {
         $post->likes()->where('user_id', auth()->id())->delete();
 
-        return back();
+        $post->load(['user', 'likes', 'comments.user'])->loadCount('likes');
+        $post->is_liked = false;
+
+        return back()->with('updatedPost', $post);
     }
 }

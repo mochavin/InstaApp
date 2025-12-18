@@ -104,12 +104,17 @@ class PostController extends Controller
         $post->caption = $request->caption;
         $post->save();
 
-        return back()->with('success', 'Post updated successfully.');
+        $post->load(['user', 'likes', 'comments.user'])->loadCount('likes');
+        $post->is_liked = auth()->check() ? $post->likes->contains('user_id', auth()->id()) : false;
+
+        return back()->with('updatedPost', $post);
     }
 
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
+
+        $postId = $post->id;
 
         // Delete image from storage if it's a local path
         if (str_contains($post->image, '/storage/posts/')) {
@@ -119,6 +124,6 @@ class PostController extends Controller
 
         $post->delete();
 
-        return back()->with('success', 'Post deleted successfully.');
+        return back()->with('deletedPostId', $postId);
     }
 }
