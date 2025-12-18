@@ -41,15 +41,16 @@ export default function PostCard({ post }: { post: Post }) {
 
     const toggleLike = () => {
         if (post.is_liked) {
-            deleteLike(postsRoutes.unlike(post.id).url);
+            deleteLike(postsRoutes.unlike(post.id).url, { preserveScroll: true });
         } else {
-            postLike(postsRoutes.like(post.id).url);
+            postLike(postsRoutes.like(post.id).url, { preserveScroll: true });
         }
     };
 
     const submitComment: FormEventHandler = (e) => {
         e.preventDefault();
         postComment(commentsRoutes.store(post.id).url, {
+            preserveScroll: true,
             onSuccess: () => resetComment(),
         });
     };
@@ -57,6 +58,7 @@ export default function PostCard({ post }: { post: Post }) {
     const handleUpdate: FormEventHandler = (e) => {
         e.preventDefault();
         updatePost(postsRoutes.update(post.id).url, {
+            preserveScroll: true,
             onSuccess: () => {
                 setIsEditing(false);
                 setPreview(null);
@@ -69,9 +71,9 @@ export default function PostCard({ post }: { post: Post }) {
         if (!deleteConfirm) return;
 
         if (deleteConfirm.type === 'post') {
-            deletePost(postsRoutes.destroy(deleteConfirm.id).url);
+            deletePost(postsRoutes.destroy(deleteConfirm.id).url, { preserveScroll: true });
         } else {
-            deletePost(commentsRoutes.destroy(deleteConfirm.id).url);
+            deletePost(commentsRoutes.destroy(deleteConfirm.id).url, { preserveScroll: true });
         }
         setDeleteConfirm(null);
     };
