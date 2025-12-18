@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
@@ -29,15 +30,35 @@ class PostController extends Controller
 
     public function myPosts()
     {
+        $user = auth()->user();
         return Inertia::render('Posts/MyPosts', [
-            'posts' => auth()->user()->posts()
+            'posts_count' => $user->posts()->count(),
+            'posts' => $user->posts()
                 ->with(['user', 'likes', 'comments.user'])
                 ->withCount('likes')
                 ->latest()
-                ->paginate(10)
+                ->paginate(5)
                 ->through(function ($post) {
                     return array_merge($post->toArray(), [
                         'is_liked' => $post->likes->contains('user_id', auth()->id()),
+                    ]);
+                }),
+        ]);
+    }
+
+    public function posts(User $user)
+    {
+        return Inertia::render('Posts/UserPosts', [
+            'user' => $user,
+            'posts_count' => $user->posts()->count(),
+            'posts' => $user->posts()
+                ->with(['user', 'likes', 'comments.user'])
+                ->withCount('likes')
+                ->latest()
+                ->paginate(5)
+                ->through(function ($post) {
+                    return array_merge($post->toArray(), [
+                        'is_liked' => auth()->check() ? $post->likes->contains('user_id', auth()->id()) : false,
                     ]);
                 }),
         ]);

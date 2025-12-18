@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import * as commentsRoutes from '@/routes/comments';
 import * as postsRoutes from '@/routes/posts';
+import * as usersRoutes from '@/routes/users';
 import { Post, SharedData } from '@/types';
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage, Link } from '@inertiajs/react';
 import { Edit2, Heart, MessageCircle, Send, Trash2 } from 'lucide-react';
 import { FormEventHandler, useState, useEffect } from 'react';
 import ConfirmDialog from '@/components/confirm-dialog';
@@ -84,11 +85,13 @@ export default function PostCard({ post }: { post: Post }) {
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <div className="flex items-center space-x-3">
-                        <Avatar>
-                            <AvatarImage src={post.user.avatar} />
-                            <AvatarFallback>{post.user.name[0]}</AvatarFallback>
-                        </Avatar>
-                        <span className="font-semibold">{post.user.name}</span>
+                        <Link href={usersRoutes.posts(post.user_id).url} className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                            <Avatar>
+                                <AvatarImage src={post.user.avatar} />
+                                <AvatarFallback>{post.user.name[0]}</AvatarFallback>
+                            </Avatar>
+                            <span className="font-semibold">{post.user.name}</span>
+                        </Link>
                     </div>
                     {post.user_id === auth.user.id && (
                         <div className="flex space-x-2">
@@ -146,7 +149,9 @@ export default function PostCard({ post }: { post: Post }) {
                             </Dialog>
                             <div className="p-4">
                                 <p className="text-sm">
-                                    <span className="font-bold mr-2">{post.user.name}</span>
+                                    <Link href={usersRoutes.posts(post.user_id).url} className="font-bold mr-2 hover:underline">
+                                        {post.user.name}
+                                    </Link>
                                     {post.caption}
                                 </p>
                             </div>
@@ -174,7 +179,9 @@ export default function PostCard({ post }: { post: Post }) {
                         {post.comments.map((comment) => (
                             <div key={comment.id} className="text-sm flex justify-between items-start">
                                 <div>
-                                    <span className="font-bold mr-2">{comment.user.name}</span>
+                                    <Link href={usersRoutes.posts(comment.user_id).url} className="font-bold mr-2 hover:underline">
+                                        {comment.user.name}
+                                    </Link>
                                     {comment.body}
                                 </div>
                                 {comment.user_id === auth.user.id && (

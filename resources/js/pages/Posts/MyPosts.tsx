@@ -12,9 +12,10 @@ import PostCard from '@/components/post-card';
 
 interface Props {
     posts: PaginatedData<Post>;
+    posts_count: number;
 }
 
-export default function MyPosts({ posts }: Props) {
+export default function MyPosts({ posts, posts_count }: Props) {
     const [allPosts, setAllPosts] = useState<Post[]>(posts.data);
     const [loading, setLoading] = useState(false);
     const observer = useRef<IntersectionObserver | null>(null);
@@ -104,7 +105,10 @@ export default function MyPosts({ posts }: Props) {
 
             <div className="max-w-2xl mx-auto py-8 px-4">
                 <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 mb-8 flex justify-between items-center border-b">
-                    <h1 className="text-2xl font-bold">My Posts</h1>
+                    <div>
+                        <h1 className="text-2xl font-bold">My Posts</h1>
+                        <p className="text-sm text-muted-foreground">{posts_count} {posts_count === 1 ? 'post' : 'posts'}</p>
+                    </div>
                     <Button onClick={() => setShowCreate(!showCreate)}>
                         {showCreate ? 'Cancel' : 'Create Post'}
                     </Button>

@@ -22,6 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('my-posts', [PostController::class, 'myPosts'])->name('posts.my');
+    Route::get('users/{user}/posts', [PostController::class, 'posts'])->name('users.posts');
     Route::resource('posts', PostController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::post('posts/{post}/like', [LikeController::class, 'store'])->name('posts.like');
     Route::delete('posts/{post}/like', [LikeController::class, 'destroy'])->name('posts.unlike');
