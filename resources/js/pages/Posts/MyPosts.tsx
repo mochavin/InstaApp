@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { X, Loader2 } from 'lucide-react';
+import { X, Loader2, ImagePlus } from 'lucide-react';
 import { FormEventHandler, useState, useEffect, useRef } from 'react';
 import * as postsRoutes from '@/routes/posts';
 import PostCard from '@/components/post-card';
+import EmptyState from '@/components/empty-state';
 
 interface Props {
     posts: PaginatedData<Post>;
@@ -191,11 +192,13 @@ export default function MyPosts({ posts, posts_count }: Props) {
                 )}
 
                 {allPosts.length === 0 ? (
-                    <Card>
-                        <CardContent className="py-8 text-center text-muted-foreground">
-                            You haven't posted anything yet.
-                        </CardContent>
-                    </Card>
+                    <EmptyState
+                        icon={ImagePlus}
+                        title="No posts yet"
+                        description="Share your first photo to start your feed."
+                        actionLabel="Create Post"
+                        onAction={() => setShowCreate(true)}
+                    />
                 ) : (
                     <div className="space-y-6">
                         {allPosts.map((post, index) => (
@@ -205,13 +208,6 @@ export default function MyPosts({ posts, posts_count }: Props) {
                         ))}
                     </div>
                 )}
-
-                {/* Feed */}
-                <div className="space-y-6">
-                    {allPosts.map((post) => (
-                        <PostCard key={post.id} post={post} />
-                    ))}
-                </div>
 
                 {/* Loading Sentinel */}
                 <div ref={lastPostRef} className="h-20 flex items-center justify-center mt-4">

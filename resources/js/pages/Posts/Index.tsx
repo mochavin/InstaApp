@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { X, Loader2 } from 'lucide-react';
+import { X, Loader2, LayoutGrid } from 'lucide-react';
 import { FormEventHandler, useState, useEffect, useRef } from 'react';
 import * as postsRoutes from '@/routes/posts';
 import PostCard from '@/components/post-card';
+import EmptyState from '@/components/empty-state';
 
 interface Props {
     posts: PaginatedData<Post>;
@@ -187,11 +188,23 @@ export default function Index({ posts }: Props) {
                 )}
 
                 {/* Feed */}
-                <div className="space-y-6">
-                    {allPosts.map((post) => (
-                        <PostCard key={post.id} post={post} />
-                    ))}
-                </div>
+                {allPosts.length === 0 ? (
+                    <EmptyState
+                        icon={LayoutGrid}
+                        title="Feed is empty"
+                        description="Follow some people or create your own posts to see them here."
+                        actionLabel="Create Post"
+                        onAction={() => setShowCreate(true)}
+                    />
+                ) : (
+                    <div className="space-y-6">
+                        {allPosts.map((post, index) => (
+                            <div ref={index === allPosts.length - 1 ? lastPostRef : null} key={post.id}>
+                                <PostCard post={post} />
+                            </div>
+                        ))}
+                    </div>
+                )}
 
                 {/* Loading Sentinel */}
                 <div ref={lastPostRef} className="h-20 flex items-center justify-center mt-4">

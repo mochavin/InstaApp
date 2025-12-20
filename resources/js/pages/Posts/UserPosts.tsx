@@ -2,9 +2,10 @@ import AppLayout from '@/layouts/app-layout';
 import { PaginatedData, Post, User, SharedData } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CameraOff } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import PostCard from '@/components/post-card';
+import EmptyState from '@/components/empty-state';
 
 interface Props {
     user: User;
@@ -95,11 +96,11 @@ export default function UserPosts({ user, posts, posts_count }: Props) {
                 </div>
 
                 {allPosts.length === 0 ? (
-                    <Card>
-                        <CardContent className="py-8 text-center text-muted-foreground">
-                            This user hasn't posted anything yet.
-                        </CardContent>
-                    </Card>
+                    <EmptyState
+                        icon={CameraOff}
+                        title="No posts yet"
+                        description={`${user.name} hasn't shared any posts yet.`}
+                    />
                 ) : (
                     <div className="space-y-6">
                         {allPosts.map((post, index) => (
