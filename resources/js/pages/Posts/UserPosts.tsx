@@ -1,6 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { PaginatedData, Post, User, SharedData } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2, CameraOff } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -22,17 +23,20 @@ export default function UserPosts({ user, posts, posts_count }: Props) {
 
     useEffect(() => {
         if (flash.updatedPost) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setAllPosts((prev) => prev.map((p) => (p.id === flash.updatedPost!.id ? flash.updatedPost! : p)));
         }
     }, [flash.updatedPost]);
 
     useEffect(() => {
         if (flash.deletedPostId) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setAllPosts((prev) => prev.filter((p) => p.id !== flash.deletedPostId));
         }
     }, [flash.deletedPostId]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setAllPosts((prev) => {
             if (posts.current_page === 1) {
                 return posts.data;

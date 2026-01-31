@@ -31,11 +31,13 @@ export default function PostCard({ post }: { post: Post }) {
 
     useEffect(() => {
         if (!editData.image) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setPreview(null);
             return;
         }
 
         const objectUrl = URL.createObjectURL(editData.image);
+         
         setPreview(objectUrl);
 
         return () => URL.revokeObjectURL(objectUrl);

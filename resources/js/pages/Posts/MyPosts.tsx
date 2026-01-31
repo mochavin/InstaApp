@@ -25,6 +25,7 @@ export default function MyPosts({ posts, posts_count }: Props) {
 
     useEffect(() => {
         if (flash.newPost) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setAllPosts((prev) => {
                 if (prev.some((p) => p.id === flash.newPost!.id)) return prev;
                 return [flash.newPost!, ...prev];
@@ -34,12 +35,14 @@ export default function MyPosts({ posts, posts_count }: Props) {
 
     useEffect(() => {
         if (flash.updatedPost) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setAllPosts((prev) => prev.map((p) => (p.id === flash.updatedPost!.id ? flash.updatedPost! : p)));
         }
     }, [flash.updatedPost]);
 
     useEffect(() => {
         if (flash.deletedPostId) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setAllPosts((prev) => prev.filter((p) => p.id !== flash.deletedPostId));
         }
     }, [flash.deletedPostId]);
@@ -52,6 +55,7 @@ export default function MyPosts({ posts, posts_count }: Props) {
     });
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setAllPosts((prev) => {
             if (posts.current_page === 1) {
                 return posts.data;
@@ -106,11 +110,13 @@ export default function MyPosts({ posts, posts_count }: Props) {
 
     useEffect(() => {
         if (!data.image) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setPreview(null);
             return;
         }
 
         const objectUrl = URL.createObjectURL(data.image);
+         
         setPreview(objectUrl);
 
         return () => URL.revokeObjectURL(objectUrl);

@@ -13,7 +13,7 @@ import {
 import posts from '@/routes/posts';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Image as ImageIcon, User as UserIcon } from 'lucide-react';
+import { Image as ImageIcon, User as UserIcon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
