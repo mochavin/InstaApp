@@ -59,7 +59,7 @@ export default function Welcome({
                     </h1>
                     <p className="max-w-lg text-lg text-[#706f6c] dark:text-[#A1A09A]">
                         Welcome to InstaApp, a simple social media application where you can
-                        share your moments with friends and the world.
+                        share your moments with friends and the world
                     </p>
                 </main>
             </div>
