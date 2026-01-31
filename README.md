@@ -6,8 +6,11 @@
 
 <p align="center">
   <p align="center">
-    <a href="https://insta.avin.my.id/">Live Demo</a><br>
+    <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/872bf592-b1f4-46cc-ad4a-b8c4a546915f" />
+    <a href="https://insta.avin.my.id/">Live Demo</a> •
     <a href="https://drive.google.com/file/d/1CVgbtYGmCaTX7KZ5IDttLLbx1xND16wq/view?usp=drive_link">Video Demo</a>
+      
+
   </p>
 </p>
 
