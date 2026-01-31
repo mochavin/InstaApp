@@ -5,7 +5,10 @@
 </p>
 
 <p align="center">
-  <a href="https://insta.avin.my.id/">Live Demo</a>
+  <p align="center">
+    <a href="https://insta.avin.my.id/">Live Demo</a><br>
+    <a href="https://drive.google.com/file/d/1CVgbtYGmCaTX7KZ5IDttLLbx1xND16wq/view?usp=drive_link">Video Demo</a>
+  </p>
 </p>
 
 ---

@@ -51,7 +51,16 @@ jobs:
       - name: Build assets
         run: npm run build
 
-      - name: Deploy to VM via SSH
+      - name: Clear remote build folder and deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            rm -rf /var/www/instaapp/public/build/*
+
+      - name: Deploy build files to VM
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VM_HOST }}
@@ -61,7 +70,6 @@ jobs:
           target: "/var/www/instaapp"
           strip_components: 0
           overwrite: true
-          rm: true
 
       - name: Execute remote commands
         uses: appleboy/ssh-action@v1.0.3
